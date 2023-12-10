@@ -1,0 +1,5 @@
+tests/*
+!tests/.gitkeep
+report/
+report.json
+*__pycache__*
