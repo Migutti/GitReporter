@@ -3,3 +3,4 @@ tests/*
 report/
 report.json
 *__pycache__*
+.venv
