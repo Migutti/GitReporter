@@ -2,8 +2,7 @@
 
 testname="basic-test"
 
-rm -rf report
-mkdir report
+rm -rf gitreport
 
 rm -rf tests/$testname
 mkdir tests/$testname

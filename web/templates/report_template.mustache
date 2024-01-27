@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+            body {
+                font-family: 'Roboto', sans-serif;
+                font-weight: 300;
+                color: #222;
+                max-width: 100em;
+                margin-left: auto;
+                margin-right: auto
+            }
+            body > h1 {
+                text-align: center;
+                font-size: 3em;
+            }
+            body > h2 { 
+                text-align: center;
+                font-size: 2.3em;
+            }
+            body > h3 {
+                text-align: left;
+                margin-left: 2em;
+                font-size: 1.8em;
+            }
+            a {
+                text-decoration: none;
+            }
+            .visibility_table {
+                border-collapse: collapse;
+                margin-top: 1em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .visibility_table th {
+                border-bottom: 0.1em solid #222;
+                background: #fff;
+            }
+            .visibility_table td {
+                text-align: left;
+                background: #fff;
+            }
+            .summary-table {
+                border-collapse: collapse;
+                margin-top: 2em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .summary-table th {
+                border-bottom: 0.1em solid #222;
+            }
+            .summary-table th, td {
+                text-align: center;
+                padding-left: 1em;
+                padding-right: 1em;
+                background: #fff;
+            }
+            .summary-table tr:nth-child(12n + 1) > td,
+            .summary-table tr:nth-child(12n + 2) > td,
+            .summary-table tr:nth-child(12n + 3) > td,
+            .summary-table tr:nth-child(12n + 4) > td,
+            .summary-table tr:nth-child(12n + 5) > td,
+            .summary-table tr:nth-child(12n + 6) > td {
+                background: #eee;
+            }
+            .summary-table tr > td:first-child {
+                background: #fff;
+            }
+            .summary-table tr:hover td {
+                background: #ddd;
+            }
+            .summary-table td:nth-child(n + 3) {
+                white-space: pre;
+                text-align: right;
+                font-family: monospace;
+            }
+            .new_author td {
+                border-top: 0.05em solid #222;
+            }
+            .line_category {
+                font-weight: bold;
+                border-right: 0.1em solid #222;
+            }
+            .author_field {
+                border-right: 0.05em solid #222;
+            }
+        </style>
+        <script>
+            function toggleCollapse(button_id, element_id) {
+                let table = document.getElementById(element_id);
+                console.log(table.style.display);
+                if (table.style.display === "block") {
+                    table.style.display = "none";
+                    document.getElementById(button_id).innerHTML = 
+                        document.getElementById(button_id).innerHTML.replace("-", "+");
+                } else {
+                    table.style.display = "block";
+                    console.log(table.style.display);
+                    document.getElementById(button_id).innerHTML = 
+                        document.getElementById(button_id).innerHTML.replace("+", "-");
+                }
+            }
+            function toggleColumn(table, index) {
+                document.querySelector(table)
+                        .querySelectorAll("th:nth-child(X)".replace('X', index))
+                        .forEach(element => {
+                    if (element.style.display === "none") {
+                        element.style.display = "table-cell";
+                    } else {
+                        element.style.display = "none";
+                    }
+                });
+                document.querySelector(table)
+                        .querySelectorAll("td:nth-child(X)".replace('X', index))
+                        .forEach(element => {
+                    if (element.style.display === "none") {
+                        element.style.display = "table-cell";
+                    } else {
+                        element.style.display = "none";
+                    }
+                });
+            }
+            function toggleRow(table, index) {
+                document.querySelector(table)
+                        .querySelectorAll("tr:nth-child(6n + X)".replace('X', index))
+                        .forEach(element => {
+                    if (element.style.display === "none") {
+                        element.style.display = "table-row";
+                    } else {
+                        element.style.display = "none";
+                    }
+                });
+            }
+            function uncheck(id) {
+                document.getElementById(id).checked = false;
+            }
+            function init_page() {
+                // {{#row-names}}
+                document.getElementById("{{id}}_button").addEventListener(
+                    "click",
+                    event => toggleRow(".summary-table", "{{index}}")
+                )
+                // {{#unchecked}}
+                uncheck("{{id}}_button");
+                toggleRow(".summary-table", "{{index}}");
+                // {{/unchecked}}
+                // {{/row-names}}
+
+                // {{#column-names}}
+                document.getElementById("{{id}}_button").addEventListener(
+                    "click",
+                    event => toggleColumn(".summary-table", "{{index}}")
+                )
+                // {{#unchecked}}
+                uncheck("{{id}}_button");
+                toggleColumn(".summary-table", "{{index}}");
+                // {{/unchecked}}
+                // {{/column-names}}
+            }
+        </script>
+    </head>
+    <body onload="init_page()">
+        <h1>{{title}}</h1>
+        <h2>{{subtitle}} &mdash; '{{repository}}'</h2>
+        <div id="summary_table" style="overflow-x: auto; display: block">
+            <table class="visibility_table">
+                <thead>
+                    <tr>
+                        <th>Line Categories</th>
+                        <th>General</th>
+                        <th>Merge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#visibility_settings}}
+                    <tr>
+                        {{#sub_categories}}
+                            <td><input type="checkbox" id="{{id}}_button" checked>
+                                <label for="{{id}}_button" style="user-select: none;">{{name}}</label></td>
+                        {{/sub_categories}}
+                    </tr>
+                    {{/visibility_settings}}
+                </tbody>
+            </table>
+            <table class="summary-table" style="display: table">
+                <thead>
+                    <tr>
+                        <th class="line_category">Line Category</th>
+                        <th class="author_field">Author</th>
+                        {{#column-names}}
+                        <th id="{{id}}">{{name}}</th>
+                        {{/column-names}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#authors}}
+                    <tr class="new_author">
+                        <td class="line_category">Total</td>
+                        <td class="author_field">{{author-name}}</td>
+                        {{#statistics.total-columns}}
+                            <td>{{value}}</td>
+                        {{/statistics.total-columns}}
+                    </tr>
+                        {{#statistics.line-categories}}
+                        <tr>
+                            <td class="line_category">{{name}}</td>
+                            <td class="author_field"></td>
+                            {{#columns}}
+                                <td>{{value}}</td>
+                            {{/columns}}
+                        </tr>
+                        {{/statistics.line-categories}}
+                    {{/authors}}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
