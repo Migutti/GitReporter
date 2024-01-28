@@ -1,11 +1,7 @@
-import copy
-import os
-import chevron
-from pprint import pprint
+import os, chevron
 
 from .commit import GitCommit
 from .config import Config
-from .html_report import HTMLReport
 from .repository_statistic import GitRepositoryStatistic
 from .types import GitRepositoryStatisticCategory as RepoCategory, GitLineCategory as LineCategory
 
