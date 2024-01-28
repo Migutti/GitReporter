@@ -55,7 +55,8 @@ class Report:
             dictionary |= self.summary_table(
                 self.statistics.totals_per_file[file],
                 {author: self.statistics.authors_per_file[author][file]
-                    for author in self.statistics.authors_per_file}
+                    for author in self.statistics.authors_per_file
+                    if file in self.statistics.authors_per_file[author]}
             )
             dictionary |= self.line_mapping(file)
             self.generate_html(f'files/{file}'.replace('.', '_'), "report_template", dictionary)
@@ -174,14 +175,15 @@ class Report:
 
         # create section for each author
         for author in sorted(self.statistics.authors):
-            result['authors'].append({
-                'author-name': author,
-                "author-id": author.lower().replace(" ", "_"),
-                'statistics': self.statistic_block(
-                    author_data[author],
-                    total_data
-                )
-            })
+            if author in author_data:
+                result['authors'].append({
+                    'author-name': author,
+                    "author-id": author.lower().replace(" ", "_"),
+                    'statistics': self.statistic_block(
+                        author_data[author],
+                        total_data
+                    )
+                })
 
         return result
 
