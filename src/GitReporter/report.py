@@ -11,6 +11,8 @@ from .types import GitRepositoryStatisticCategory as RepoCategory, GitLineCatego
 
 
 class Report:
+    TITLE = 'GitReporter (Version 0.1)'
+
     def __init__(self, config, statistics, commit_list):
         self.config: Config = config
         self.statistics: GitRepositoryStatistic = statistics
@@ -25,17 +27,38 @@ class Report:
             os.mkdir("gitreport/files")
 
         self.entire_repository_report()
+        self.file_reports()
+        return
 
     def entire_repository_report(self):
         dictionary = {
-            'title': 'GitReporter (Version 0.1)',
+            'title': self.TITLE,
             'subtitle': 'Entire Repository',
             'repository': self.config.options['repo'].split('/')[-1],
+            'is-file': False,
             'visibility_settings': self.visibility_settings()
         }
         dictionary |= self.summary_table(self.statistics.totals, self.statistics.authors)
         self.generate_html("repository_report", "report_template", dictionary)
         return
+
+    def file_reports(self):
+        for file in self.commit_list[0].files:
+            dictionary = {
+                'title': self.TITLE,
+                'subtitle': f'File: {file}',
+                'repository': self.config.options['repo'].split('/')[-1],
+                'is-file': True,
+                'visibility_settings': self.visibility_settings()
+                # TODO: line_mapping visibility settings
+            }
+            dictionary |= self.summary_table(
+                self.statistics.totals_per_file[file],
+                {author: self.statistics.authors_per_file[author][file]
+                    for author in self.statistics.authors_per_file}
+            )
+            dictionary |= self.line_mapping(file)
+            self.generate_html(f'files/{file}'.replace('.', '_'), "report_template", dictionary)
 
     def generate_html(self, html_name, template_name, dictionary):
         with open(f'web/templates/{template_name}.mustache', 'r', encoding='utf-8') as f:
@@ -145,6 +168,7 @@ class Report:
         # create section for the totals
         result['authors'].append({
             'author-name': 'Total',
+            'author-id': 'total',
             'statistics': self.statistic_block(total_data)
         })
 
@@ -152,6 +176,7 @@ class Report:
         for author in sorted(self.statistics.authors):
             result['authors'].append({
                 'author-name': author,
+                "author-id": author.lower().replace(" ", "_"),
                 'statistics': self.statistic_block(
                     author_data[author],
                     total_data
@@ -159,3 +184,31 @@ class Report:
             })
 
         return result
+
+    def find_author(self, binsha):
+        commit = next(
+            filter(
+                lambda commit:
+                    commit.commit.binsha == binsha and \
+                    self.config.in_time_interval(commit.commit.committed_datetime),
+                self.commit_list
+            ),
+            None
+        )
+        return commit.commit.author.email if commit else None
+
+    def line_mapping(self, file):
+        dictionary = {
+            'line-mapping': []
+        }
+
+        lines = self.commit_list[0].files[file].lines
+        for idx, line in enumerate(lines, start=1):
+            dictionary['line-mapping'].append({
+                'number': idx,
+                'type': line.get_type().value.lower().replace(" ", "_"),
+                'content': line.text[:120],
+                'author': self.find_author(line.history[0]).lower().replace(" ", "_")
+            })
+
+        return dictionary

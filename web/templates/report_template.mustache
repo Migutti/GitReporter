@@ -44,6 +44,7 @@
             .summary-table {
                 border-collapse: collapse;
                 margin-top: 2em;
+                margin-bottom: 2em;
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -83,6 +84,30 @@
                 border-right: 0.1em solid #222;
             }
             .author_field {
+                border-right: 0.05em solid #222;
+            }
+            .line_mapping_table {
+                border-collapse: collapse;
+                margin-top: 2em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .line_mapping_table td:first-child {
+                text-align: right;
+                padding-left: 1em;
+                padding-right: 1em;
+                background: #fff;
+            }
+            .line_mapping_table td:nth-child(2) {
+                text-align: left;
+                padding-left: 1em;
+                padding-right: 1em;
+                background: #fff;
+            }
+            .line_mapping_table pre {
+                display: inline;
+            }
+            .line_number {
                 border-right: 0.05em solid #222;
             }
         </style>
@@ -135,6 +160,33 @@
             function uncheck(id) {
                 document.getElementById(id).checked = false;
             }
+            function colorLines(author_name) {
+                document.querySelectorAll("td[data-author]").forEach(element => {
+                    let author = element.getAttribute("data-author");
+                    let type = element.getAttribute("data-type");
+
+                    if (author === author_name || author_name === "total") {
+                        switch (type) {
+                            case "code":
+                                element.style.background = "#ffc0c0";
+                                break;
+                            case "comment":
+                                element.style.background = "#ffd8d8";
+                                break;
+                            case "empty":
+                            case "symbols_only":
+                            case "unknown":
+                                element.style.background = "#ffebeb";
+                                break;
+                            default:
+                                element.style.background = "#fff";
+                                break;
+                        }
+                    } else {
+                        element.style.background = "#fff";
+                    }
+                })
+            }
             function init_page() {
                 // {{#row-names}}
                 document.getElementById("{{id}}_button").addEventListener(
@@ -157,6 +209,17 @@
                 toggleColumn(".summary-table", "{{index}}");
                 // {{/unchecked}}
                 // {{/column-names}}
+
+                // {{#is-file}}
+                document.querySelectorAll("input[name=line_mapping_select]").forEach(element => {
+                    element.addEventListener(
+                        "click",
+                        event => colorLines(element.getAttribute("id").replace("_button", ""))
+                    )
+                })
+                colorLines("total");
+                document.getElementById("total_button").checked = true;
+                // {{/is-file}}
             }
         </script>
     </head>
@@ -215,5 +278,36 @@
                 </tbody>
             </table>
         </div>
+        {{#is-file}}
+        <hr>
+        <h2 style="margin-top: 1em">Line Mapping</h2>
+        <div id="line_mapping" style="overflow-x: auto; display: block">
+            <table class="visibility_table">
+                <thead>
+                    <tr>
+                        <th>Authors</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#authors}}
+                    <tr>
+                        <td><input type="radio" id="{{author-id}}_button" name="line_mapping_select">
+                            <label for="{{author-id}}_button" style="user-select: none;">{{author-name}}</label></td>
+                    </tr>
+                    {{/authors}}
+                </tbody>
+            </table>
+            <table class="line_mapping_table">
+                <tbody>
+                    {{#line-mapping}}
+                    <tr>
+                        <td class="line_number">{{number}}</td>
+                        <td data-author="{{author}}" data-type="{{type}}"><pre><code>{{content}}</code></pre></td>
+                    </tr>
+                    {{/line-mapping}}
+                </tbody>
+            </table>
+        </div>
+        {{/is-file}}
     </body>
 </html>
