@@ -102,6 +102,7 @@ class GitFile:
                     # we have some non-whitespace code
                     lines.append(Textline(LineCategory.CODE, text_without_ws, binsha))
                     create_new = False
+                    # TODO: bug, if last line is SYMBOL_ONLY
                 elif token_type is Token.Comment.Singleline or token_type is Token.Comment.Multiline:
                     # we have a comment
                     lines.append(Textline(LineCategory.COMMENT, text_without_ws, binsha))
