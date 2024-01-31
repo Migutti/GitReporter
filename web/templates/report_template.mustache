@@ -3,10 +3,34 @@
     <head>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    color-scheme: dark;
+                    --textcol: #fefefe;
+                    --lightbackground: inherit;
+                    --hover: #444;
+                    --altbackground: #333;
+                    --codecol: #8b3c3c;
+                    --commentcol: #6b2b2b;
+                    --unknowncol: #4b2020;
+                }
+            }
+            @media (prefers-color-scheme: light) {
+                :root {
+                    color-scheme: light;
+                    --textcol: #222;
+                    --lightbackground: #fff;
+                    --hover: #ddd;
+                    --altbackground: #eee;
+                    --codecol: #ffc0c0;
+                    --commentcol: #ffd8d8;
+                    --unknowncol: #ffebeb;
+                }
+            }
             body {
                 font-family: 'Roboto', sans-serif;
                 font-weight: 300;
-                color: #222;
+                color: var(--textcol);
                 max-width: 100em;
                 margin-left: auto;
                 margin-right: auto
@@ -15,7 +39,7 @@
                 text-align: center;
                 font-size: 3em;
             }
-            body > h2 {
+            body > h2 { 
                 text-align: center;
                 font-size: 2.3em;
             }
@@ -29,62 +53,62 @@
             }
             .visibility_table {
                 border-collapse: collapse;
-                margin-top: 0em;
+                margin-top: 1em;
                 margin-left: auto;
                 margin-right: auto;
             }
             .visibility_table th {
-                border-bottom: 0.1em solid #222;
-                background: #fff;
+                border-bottom: 0.1em solid var(--textcol);
+                background: var(--lightbackground);
             }
             .visibility_table td {
                 text-align: left;
-                background: #fff;
+                background: var(--lightbackground);;
             }
-            .summary-table {
+            .summary_table {
                 border-collapse: collapse;
                 margin-top: 2em;
                 margin-bottom: 2em;
                 margin-left: auto;
                 margin-right: auto;
             }
-            .summary-table th {
-                border-bottom: 0.1em solid #222;
+            .summary_table th {
+                border-bottom: 0.1em solid var(--textcol);
             }
-            .summary-table th, td {
+            .summary_table th, td {
                 text-align: center;
                 padding-left: 1em;
                 padding-right: 1em;
-                background: #fff;
+                background: var(--lightbackground);;
             }
-            .summary-table tr:nth-child(12n + 1) > td,
-            .summary-table tr:nth-child(12n + 2) > td,
-            .summary-table tr:nth-child(12n + 3) > td,
-            .summary-table tr:nth-child(12n + 4) > td,
-            .summary-table tr:nth-child(12n + 5) > td,
-            .summary-table tr:nth-child(12n + 6) > td {
-                background: #eee;
+            .summary_table tr:nth-child(12n + 1) > td,
+            .summary_table tr:nth-child(12n + 2) > td,
+            .summary_table tr:nth-child(12n + 3) > td,
+            .summary_table tr:nth-child(12n + 4) > td,
+            .summary_table tr:nth-child(12n + 5) > td,
+            .summary_table tr:nth-child(12n + 6) > td {
+                background: var(--altbackground);
             }
-            .summary-table tr > td:first-child {
-                background: #fff;
+            .summary_table tr > td:first-child {
+                background: var(--lightbackground);;
             }
-            .summary-table tr:hover td {
-                background: #ddd;
+            .summary_table tr:hover td {
+                background: var(--hover);
             }
-            .summary-table td:nth-child(n + 3) {
+            .summary_table td:nth-child(n + 3) {
                 white-space: pre;
                 text-align: right;
                 font-family: monospace;
             }
             .new_author td {
-                border-top: 0.05em solid #222;
+                border-top: 0.05em solid var(--textcol);
             }
             .line_category {
                 font-weight: bold;
-                border-right: 0.1em solid #222;
+                border-right: 0.1em solid var(--textcol);
             }
             .author_field {
-                border-right: 0.05em solid #222;
+                border-right: 0.05em solid var(--textcol);
             }
             .line_mapping_table {
                 border-collapse: collapse;
@@ -96,19 +120,19 @@
                 text-align: right;
                 padding-left: 1em;
                 padding-right: 1em;
-                background: #fff;
+                background: var(--lightbackground);;
             }
             .line_mapping_table td:nth-child(2) {
                 text-align: left;
                 padding-left: 1em;
                 padding-right: 1em;
-                background: #fff;
+                background: var(--lightbackground);;
             }
             .line_mapping_table pre {
                 display: inline;
             }
             .line_number {
-                border-right: 0.05em solid #222;
+                border-right: 0.05em solid var(--textcol);
             }
         </style>
         <script>
@@ -168,22 +192,22 @@
                     if (author === author_name || author_name === "total") {
                         switch (type) {
                             case "code":
-                                element.style.background = "#ffc0c0";
+                                element.style.background = "var(--codecol)";
                                 break;
                             case "comment":
-                                element.style.background = "#ffd8d8";
+                                element.style.background = "var(--commentcol)";
                                 break;
                             case "empty":
                             case "symbols_only":
                             case "unknown":
-                                element.style.background = "#ffebeb";
+                                element.style.background = "var(--unknowncol)";
                                 break;
                             default:
-                                element.style.background = "#fff";
+                                element.style.background = "var(--lightbackground)";
                                 break;
                         }
                     } else {
-                        element.style.background = "#fff";
+                        element.style.background = "var(--lightbackground)";
                     }
                 })
             }
@@ -191,22 +215,22 @@
                 // {{#row-names}}
                 document.getElementById("{{id}}_button").addEventListener(
                     "click",
-                    event => toggleRow(".summary-table", "{{index}}")
+                    event => toggleRow(".summary_table", "{{index}}")
                 )
                 // {{#unchecked}}
                 uncheck("{{id}}_button");
-                toggleRow(".summary-table", "{{index}}");
+                toggleRow(".summary_table", "{{index}}");
                 // {{/unchecked}}
                 // {{/row-names}}
 
                 // {{#column-names}}
                 document.getElementById("{{id}}_button").addEventListener(
                     "click",
-                    event => toggleColumn(".summary-table", "{{index}}")
+                    event => toggleColumn(".summary_table", "{{index}}")
                 )
                 // {{#unchecked}}
                 uncheck("{{id}}_button");
-                toggleColumn(".summary-table", "{{index}}");
+                toggleColumn(".summary_table", "{{index}}");
                 // {{/unchecked}}
                 // {{/column-names}}
 
@@ -246,7 +270,7 @@
                     {{/visibility_settings}}
                 </tbody>
             </table>
-            <table class="summary-table" style="display: table">
+            <table class="summary_table" style="display: table">
                 <thead>
                     <tr>
                         <th class="line_category">Line Category</th>
@@ -278,8 +302,8 @@
                 </tbody>
             </table>
         </div>
-        {{#is-file}}
         <hr>
+        {{#is-file}}
         <h2 style="margin-top: 1em">Line Mapping</h2>
         <div id="line_mapping" style="overflow: auto; display: block">
             <table class="visibility_table">
