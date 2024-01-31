@@ -35,6 +35,7 @@ class Report:
             'visibility_settings': self.visibility_settings()
         }
         dictionary |= self.summary_table(self.statistics.totals, self.statistics.authors)
+        dictionary |= self.file_table()
         self.generate_html("repository_report", "report_template", dictionary)
         return
 
@@ -55,7 +56,7 @@ class Report:
                     if file in self.statistics.authors_per_file[author]}
             )
             dictionary |= self.line_mapping(file)
-            self.generate_html(f'files/{file}'.replace('.', '_'), "report_template", dictionary)
+            self.generate_html(f"files/{file.replace('.', '_').replace('/', '_')}", "report_template", dictionary)
 
     def generate_html(self, html_name, template_name, dictionary):
         with open(f'web/templates/{template_name}.mustache', 'r', encoding='utf-8') as f:
@@ -210,3 +211,12 @@ class Report:
             })
 
         return dictionary
+
+    def file_table(self):
+        return {
+            'files': [{
+                'name': filename,
+                'link': './files/' + filename.replace('.', '_').replace('/', '_') + '.html',
+                'value': self.statistics.totals_per_file[filename].get_sum(RepoCategory.SURVIVED_LINES)
+            } for filename in self.commit_list[0].files]
+        }
