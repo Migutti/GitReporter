@@ -1,0 +1,11 @@
+{
+  "repo": "tests/demonstration-repo",
+  "branch": "main",
+  "author-whitelist": [],
+  "author-blacklist": [],
+  "file-whitelist": [],
+  "diff-recursion-depth": 2,
+  "diff-recursion-block-size-threshold": 3,
+  "allow-modifications": true,
+  "comments-and-coding-standard": true
+}

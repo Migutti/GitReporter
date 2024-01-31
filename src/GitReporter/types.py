@@ -1,11 +1,11 @@
 from enum import Enum
 
 class GitLineCategory(str, Enum):
-    UNKNOWN = "UNKNOWN"
-    EMPTY = "EMPTY"
-    SYMBOLS_ONLY = "SYMBOLS_ONLY"
-    CODE = "CODE"
-    COMMENT = "COMMENT"
+    CODE = "Code"
+    EMPTY = "Empty"
+    SYMBOLS_ONLY = "Symbols Only"
+    COMMENT = "Comment"
+    UNKNOWN = "Unknown"
 
 class GitCommitStatisticCategory(str, Enum):
     INSERTIONS = "INSERTIONS"
@@ -13,12 +13,12 @@ class GitCommitStatisticCategory(str, Enum):
     MODIFICATIONS = "MODIFICATIONS"
 
 class GitRepositoryStatisticCategory(str, Enum):
-    SURVIVED_LINES = "SURVIVED_LINES"
-    INSERTIONS = "INSERTIONS"
-    DELETIONS = "DELETIONS"
-    MODIFICATIONS = "MODIFICATIONS"
-    COMMITS = "COMMITS"
-    MERGE_INSERTIONS = "MERGE_INSERTIONS"
-    MERGE_DELETIONS = "MERGE_DELETIONS"
-    MERGE_MODIFICATIONS = "MERGE_MODIFICATIONS"
-    MERGE_COMMITS = "MERGE_COMMITS"
+    SURVIVED_LINES = "Survived Lines"
+    INSERTIONS = "Insertions"
+    DELETIONS = "Deletions"
+    MODIFICATIONS = "Modifications"
+    COMMITS = "Commits"
+    MERGE_INSERTIONS = "Merge Insertions"
+    MERGE_DELETIONS = "Merge Deletions"
+    MERGE_MODIFICATIONS = "Merge Modifications"
+    MERGE_COMMITS = "Merge Commits"

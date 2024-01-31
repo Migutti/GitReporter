@@ -124,4 +124,5 @@ class GitFile:
                 else:
                     assert False, f'This code should be unreachable! We have type: {token_type}'
 
+        lines[-1].update_symbols_only()
         return lines
