@@ -3,34 +3,32 @@
     <head>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    color-scheme: dark;
-                    --textcol: #fefefe;
-                    --lightbackground: inherit;
-                    --hover: #444;
-                    --altbackground: #333;
-                    --codecol: #8b3c3c;
-                    --commentcol: #6b2b2b;
-                    --unknowncol: #4b2020;
-                }
+            :root {
+                color-scheme: light;
+                --textcol: #222;
+                --lightbackground: #fff;
+                --hover: #ddd;
+                --altbackground: #eee;
+                --codecol: #ffc0c0;
+                --commentcol: #ffd8d8;
+                --unknowncol: #ffebeb;
+                accent-color: #c03838;
             }
-            @media (prefers-color-scheme: light) {
-                :root {
-                    color-scheme: light;
-                    --textcol: #222;
-                    --lightbackground: #fff;
-                    --hover: #ddd;
-                    --altbackground: #eee;
-                    --codecol: #ffc0c0;
-                    --commentcol: #ffd8d8;
-                    --unknowncol: #ffebeb;
-                }
+            :root:has(#visibility_mode:checked) {
+                color-scheme: dark;
+                --textcol: #fefefe;
+                --lightbackground: #181818;
+                --hover: #444;
+                --altbackground: #333;
+                --codecol: #8b3c3c;
+                --commentcol: #6b2b2b;
+                --unknowncol: #4b2020;
             }
             body {
                 font-family: 'Roboto', sans-serif;
                 font-weight: 300;
                 color: var(--textcol);
+                background-color: var(--lightbackground);
                 max-width: 100em;
                 margin-left: auto;
                 margin-right: auto
@@ -38,6 +36,7 @@
             body > h1 {
                 text-align: center;
                 font-size: 3em;
+                margin-top: 0em;
             }
             body > h2 { 
                 text-align: center;
@@ -50,6 +49,9 @@
             }
             a {
                 text-decoration: none;
+            }
+            label {
+                user-select: none;
             }
             .visibility_table {
                 border-collapse: collapse;
@@ -212,6 +214,10 @@
                 })
             }
             function init_page() {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.getElementById("visibility_mode").checked = true;
+                }
+
                 // {{#row-names}}
                 document.getElementById("{{id}}_button").addEventListener(
                     "click",
@@ -248,6 +254,10 @@
         </script>
     </head>
     <body onload="init_page()">
+        <div style="text-align: right; padding-top:1em; margin-right:2em; font-size:1.15em">
+            <input type="checkbox" id="visibility_mode">
+            <label for="visibility_mode"><u>Dark Mode</u></label>
+        </div>
         <h1>{{title}}</h1>
         <h2>{{subtitle}} &mdash; <i>{{repository}}</i></h2>
         <div id="summary_table" style="overflow-x: auto; display: block">
@@ -264,7 +274,7 @@
                     <tr>
                         {{#sub_categories}}
                             <td><input type="checkbox" id="{{id}}_button" checked>
-                                <label for="{{id}}_button" style="user-select: none;">{{name}}</label></td>
+                                <label for="{{id}}_button">{{name}}</label></td>
                         {{/sub_categories}}
                     </tr>
                     {{/visibility_settings}}
@@ -316,7 +326,7 @@
                     {{#authors}}
                     <tr>
                         <td><input type="radio" id="{{author-id}}_button" name="line_mapping_select">
-                            <label for="{{author-id}}_button" style="user-select: none;">{{author-name}}</label></td>
+                            <label for="{{author-id}}_button">{{author-name}}</label></td>
                     </tr>
                     {{/authors}}
                 </tbody>
