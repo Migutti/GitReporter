@@ -53,7 +53,7 @@ class Config:
                 if key in self.options:
                     self.options[key] = value
 
-                if key == "start-date" or key == "end-date":
+                if key == "start-date" or key == "end-date" or key == "hard-end-date":
                     try:
                         self.options[key] = datetime.fromisoformat(value)
                     except:

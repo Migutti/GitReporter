@@ -1,0 +1,11 @@
+{
+  "repo": "tests/multiline-string",
+  "branch": "main",
+  "author-whitelist": [],
+  "author-blacklist": [],
+  "file-whitelist": [],
+  "diff-recursion-depth": 2,
+  "diff-recursion-block-size-threshold": 4,
+  "allow-modifications": false,
+  "comments-and-coding-standard": true
+}

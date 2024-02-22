@@ -33,6 +33,7 @@ class CppCommentLexer(RegexLexer):
             (r"'", String.Char, 'root')
         ],
         'string': [
+            (r'\\\n', Text.Whitespace),
             (r'\\.', String),
             (r'[^"\\\n]+', String),
             (r"\n", Text.Whitespace),
@@ -122,7 +123,8 @@ class GitFile:
                 elif token_type is Token.Comment.Singleline or token_type is Token.Comment.Multiline:
                     lines[-1].add_token(LineCategory.COMMENT, text_without_ws)
                 else:
-                    assert False, f'This code should be unreachable! We have type: {token_type}'
+                    assert False, f'This code should be unreachable! We have type: {token_type}, {text}'
 
-        lines[-1].update_symbols_only()
+        if lines:
+            lines[-1].update_symbols_only()
         return lines
