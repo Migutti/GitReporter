@@ -1,4 +1,5 @@
 import os, chevron
+from importlib.resources import files
 
 from .commit import GitCommit
 from .config import Config
@@ -59,9 +60,9 @@ class Report:
             self.generate_html(f"files/{file.replace('.', '_').replace('/', '_')}", "report_template", dictionary)
 
     def generate_html(self, html_name, template_name, dictionary):
-        with open(f'web/templates/{template_name}.mustache', 'r', encoding='utf-8') as f:
-            with open(f'gitreport/{html_name}.html', 'w', encoding='utf-8') as g:
-                g.write(chevron.render(f, dictionary))
+        template = files('gitreporter.templates').joinpath(f'{template_name}.mustache').read_text()
+        with open(f'gitreport/{html_name}.html', 'w', encoding='utf-8') as g:
+            g.write(chevron.render(template, dictionary))
 
     def data_with_ref(self, data, reference):
         if reference is None:
