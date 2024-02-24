@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+            :root {
+                color-scheme: light;
+                --textcol: #222;
+                --lightbackground: #fff;
+                --hover: #ddd;
+                --altbackground: #eee;
+                --codecol: #ffc0c0;
+                --commentcol: #ffd8d8;
+                --unknowncol: #ffebeb;
+                accent-color: #c03838;
+            }
+            :root:has(#visibility_mode:checked) {
+                color-scheme: dark;
+                --textcol: #fefefe;
+                --lightbackground: #181818;
+                --hover: #444;
+                --altbackground: #333;
+                --codecol: #8b3c3c;
+                --commentcol: #6b2b2b;
+                --unknowncol: #4b2020;
+            }
+            body {
+                font-family: 'Roboto', sans-serif;
+                font-weight: 300;
+                color: var(--textcol);
+                background-color: var(--lightbackground);
+                max-width: 100em;
+                margin-left: auto;
+                margin-right: auto
+            }
+            body > h1 {
+                text-align: center;
+                font-size: 3em;
+                margin-top: 0em;
+            }
+            body > h2 { 
+                text-align: center;
+                font-size: 2.3em;
+            }
+            body > h3 {
+                text-align: left;
+                margin-left: 2em;
+                font-size: 1.8em;
+            }
+            a {
+                text-decoration: none;
+                color: var(--textcol);
+            }
+            label {
+                user-select: none;
+            }
+            .visibility_table {
+                border-collapse: collapse;
+                margin-top: 1em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .visibility_table th {
+                border-bottom: 0.1em solid var(--textcol);
+                background: var(--lightbackground);
+            }
+            .visibility_table td {
+                text-align: left;
+                background: var(--lightbackground);;
+            }
+            .summary_table {
+                border-collapse: collapse;
+                margin-top: 2em;
+                margin-bottom: 2em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .summary_table th {
+                border-bottom: 0.1em solid var(--textcol);
+            }
+            .summary_table th, td {
+                text-align: center;
+                padding-left: 1em;
+                padding-right: 1em;
+                background: var(--lightbackground);;
+            }
+            .summary_table tr:nth-child(12n + 1) > td,
+            .summary_table tr:nth-child(12n + 2) > td,
+            .summary_table tr:nth-child(12n + 3) > td,
+            .summary_table tr:nth-child(12n + 4) > td,
+            .summary_table tr:nth-child(12n + 5) > td,
+            .summary_table tr:nth-child(12n + 6) > td {
+                background: var(--altbackground);
+            }
+            .summary_table tr > td:first-child {
+                background: var(--lightbackground);;
+            }
+            .summary_table tr:hover td {
+                background: var(--hover);
+            }
+            .summary_table td:nth-child(n + 3) {
+                white-space: pre;
+                text-align: right;
+                font-family: monospace;
+            }
+            .new_author td {
+                border-top: 0.05em solid var(--textcol);
+            }
+            .line_category {
+                font-weight: bold;
+                border-right: 0.1em solid var(--textcol);
+            }
+            .author_field {
+                border-right: 0.05em solid var(--textcol);
+            }
+            .line_mapping_table {
+                border-collapse: collapse;
+                margin-top: 2em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .line_mapping_table td:first-child {
+                text-align: right;
+                padding-left: 1em;
+                padding-right: 1em;
+                background: var(--lightbackground);;
+            }
+            .line_mapping_table td:nth-child(2) {
+                text-align: left;
+                padding-left: 1em;
+                padding-right: 1em;
+                background: var(--lightbackground);;
+            }
+            .line_mapping_table pre {
+                display: inline;
+            }
+            .line_number {
+                border-right: 0.05em solid var(--textcol);
+            }
+            .file_table {
+                border-collapse: collapse;
+                margin-top: 0em;
+                margin-bottom: 2em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .file_table tr > th:first-child,
+            .file_table tr > td:first-child {
+                border-right: 0.1em solid var(--textcol);
+            }
+            .file_table th, td {
+                text-align: center;
+                padding-left: 1em;
+                padding-right: 1em;
+                background: var(--lightbackground);;
+            }
+            .file_table th {
+                border-bottom: 0.1em solid var(--textcol);
+            }
+        </style>
+        <script>
+            function toggleCollapse(button_id, element_id) {
+                let table = document.getElementById(element_id);
+                console.log(table.style.display);
+                if (table.style.display === "block") {
+                    table.style.display = "none";
+                    document.getElementById(button_id).innerHTML = 
+                        document.getElementById(button_id).innerHTML.replace("-", "+");
+                } else {
+                    table.style.display = "block";
+                    console.log(table.style.display);
+                    document.getElementById(button_id).innerHTML = 
+                        document.getElementById(button_id).innerHTML.replace("+", "-");
+                }
+            }
+            function toggleColumn(table, index) {
+                document.querySelector(table)
+                        .querySelectorAll("th:nth-child(X)".replace('X', index))
+                        .forEach(element => {
+                    if (element.style.display === "none") {
+                        element.style.display = "table-cell";
+                    } else {
+                        element.style.display = "none";
+                    }
+                });
+                document.querySelector(table)
+                        .querySelectorAll("td:nth-child(X)".replace('X', index))
+                        .forEach(element => {
+                    if (element.style.display === "none") {
+                        element.style.display = "table-cell";
+                    } else {
+                        element.style.display = "none";
+                    }
+                });
+            }
+            function toggleRow(table, index) {
+                document.querySelector(table)
+                        .querySelectorAll("tr:nth-child(6n + X)".replace('X', index))
+                        .forEach(element => {
+                    if (element.style.display === "none") {
+                        element.style.display = "table-row";
+                    } else {
+                        element.style.display = "none";
+                    }
+                });
+            }
+            function uncheck(id) {
+                document.getElementById(id).checked = false;
+            }
+            function colorLines(author_name) {
+                document.querySelectorAll("td[data-author]").forEach(element => {
+                    let author = element.getAttribute("data-author");
+                    let type = element.getAttribute("data-type");
+
+                    if (author === author_name || author_name === "total") {
+                        switch (type) {
+                            case "code":
+                                element.style.background = "var(--codecol)";
+                                break;
+                            case "comment":
+                                element.style.background = "var(--commentcol)";
+                                break;
+                            case "empty":
+                            case "symbols_only":
+                            case "unknown":
+                                element.style.background = "var(--unknowncol)";
+                                break;
+                            default:
+                                element.style.background = "var(--lightbackground)";
+                                break;
+                        }
+                    } else {
+                        element.style.background = "var(--lightbackground)";
+                    }
+                })
+            }
+            function init_page() {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.getElementById("visibility_mode").checked = true;
+                }
+
+                // {{#row-names}}
+                document.getElementById("{{id}}_button").addEventListener(
+                    "click",
+                    event => toggleRow(".summary_table", "{{index}}")
+                )
+                // {{#unchecked}}
+                uncheck("{{id}}_button");
+                toggleRow(".summary_table", "{{index}}");
+                // {{/unchecked}}
+                // {{/row-names}}
+
+                // {{#column-names}}
+                document.getElementById("{{id}}_button").addEventListener(
+                    "click",
+                    event => toggleColumn(".summary_table", "{{index}}")
+                )
+                // {{#unchecked}}
+                uncheck("{{id}}_button");
+                toggleColumn(".summary_table", "{{index}}");
+                // {{/unchecked}}
+                // {{/column-names}}
+
+                // {{#is-file}}
+                document.querySelectorAll("input[name=line_mapping_select]").forEach(element => {
+                    element.addEventListener(
+                        "click",
+                        event => colorLines(element.getAttribute("id").replace("_button", ""))
+                    )
+                })
+                colorLines("total");
+                document.getElementById("total_button").checked = true;
+                // {{/is-file}}
+            }
+        </script>
+    </head>
+    <body onload="init_page()">
+        <div style="text-align: right; padding-top:1em; margin-right:2em; font-size:1.15em">
+            <input type="checkbox" id="visibility_mode">
+            <label for="visibility_mode"><u>Dark Mode</u></label>
+        </div>
+        <h1>{{title}}</h1>
+        <h2>{{subtitle}} &mdash; <i>{{repository}}</i></h2>
+        <div id="summary_table" style="overflow-x: auto; display: block">
+            <table class="visibility_table">
+                <thead>
+                    <tr>
+                        <th>Line Categories</th>
+                        <th>General</th>
+                        <th>Merge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#visibility_settings}}
+                    <tr>
+                        {{#sub_categories}}
+                            <td><input type="checkbox" id="{{id}}_button" checked>
+                                <label for="{{id}}_button">{{name}}</label></td>
+                        {{/sub_categories}}
+                    </tr>
+                    {{/visibility_settings}}
+                </tbody>
+            </table>
+            <table class="summary_table" style="display: table">
+                <thead>
+                    <tr>
+                        <th class="line_category">Line Category</th>
+                        <th class="author_field">Author</th>
+                        {{#column-names}}
+                        <th id="{{id}}">{{name}}</th>
+                        {{/column-names}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#authors}}
+                    <tr class="new_author">
+                        <td class="line_category">Total</td>
+                        <td class="author_field">{{author-name}}</td>
+                        {{#statistics.total-columns}}
+                            <td>{{value}}</td>
+                        {{/statistics.total-columns}}
+                    </tr>
+                        {{#statistics.line-categories}}
+                        <tr>
+                            <td class="line_category">{{name}}</td>
+                            <td class="author_field"></td>
+                            {{#columns}}
+                                <td>{{value}}</td>
+                            {{/columns}}
+                        </tr>
+                        {{/statistics.line-categories}}
+                    {{/authors}}
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        {{^is-file}}
+        <h2 style="margin-top: 1em">Files</h2>
+        <div id="file_table" style="overflow: auto; display: block">
+            <table class="file_table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Total Survived Lines</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#files}}
+                    <tr>
+                        <td><a href="{{link}}">&gt;&ensp;{{name}}</a></td>
+                        <td>{{value}}</td>
+                    </tr>
+                    {{/files}}
+                </tbody>
+            </table>
+        </div>
+        {{/is-file}}
+        {{#is-file}}
+        <h2 style="margin-top: 1em">Line Mapping</h2>
+        <div id="line_mapping" style="overflow: auto; display: block">
+            <table class="visibility_table">
+                <thead>
+                    <tr>
+                        <th>Authors</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#authors}}
+                    <tr>
+                        <td><input type="radio" id="{{author-id}}_button" name="line_mapping_select">
+                            <label for="{{author-id}}_button">{{author-name}}</label></td>
+                    </tr>
+                    {{/authors}}
+                </tbody>
+            </table>
+            <table class="line_mapping_table">
+                <tbody>
+                    {{#line-mapping}}
+                    <tr>
+                        <td class="line_number">{{number}}</td>
+                        <td data-author="{{author}}" data-type="{{type}}"><pre><code>{{content}}</code></pre></td>
+                    </tr>
+                    {{/line-mapping}}
+                </tbody>
+            </table>
+        </div>
+        {{/is-file}}
+    </body>
+</html>

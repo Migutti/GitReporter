@@ -1,10 +1,9 @@
-from src.GitReporter.repository import GitRepository
-from src.GitReporter.config import Config, ConfigException
-
+from .config import Config, ConfigException
+from .repository import GitRepository
 
 def main():
     """
-    python main.py [-h] -c CONFIG [-b BRANCH]
+    python -m gitreporter [-h] -c CONFIG [-b BRANCH]
     """
     try:
         config = Config(read_cli_args=True)
@@ -17,7 +16,3 @@ def main():
     git_repo.create_report()
 
     return 0
-
-
-if __name__ == '__main__':
-    exit(main())

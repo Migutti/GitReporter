@@ -24,4 +24,4 @@ git add main.c
 git commit -m "Second commit"
 
 cd ../..
-python main.py -c test-definitions/$testname/config.json
+gitreporter -c test-definitions/$testname/config.json

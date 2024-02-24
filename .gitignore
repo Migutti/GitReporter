@@ -6,4 +6,5 @@ report.json
 .venv
 .vscode/
 gitreport/
-
+dist/
+src/gitreporter.egg-info/

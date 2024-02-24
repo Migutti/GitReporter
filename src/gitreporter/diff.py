@@ -7,10 +7,10 @@ from .textline import Textline
 
 
 class GitDiff:
-    def __init__(self, commit_a: [GitCommit, None], commit_b: GitCommit, config, commit_a2: [GitCommit, None] = None):
+    def __init__(self, commit_a, commit_b: GitCommit, config, commit_a2 = None):
         self.commit_a: GitCommit = commit_a
         self.commit_b: GitCommit = commit_b
-        self.commit_a2: [GitCommit, None] = commit_a2
+        self.commit_a2 = commit_a2
         self.config: Config = config
 
     def compute_similarity(self, left, right):
