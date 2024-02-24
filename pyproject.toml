@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gitreporter"
-version = "0.1"
+version = "0.1.1"
 authors = [
   { name="Michael Guttmann", email="michael.guttmann@live.at" },
 ]
@@ -29,4 +29,4 @@ Homepage = "https://github.com/Migutti/GitReporter"
 "gitreporter.templates" = ["*.mustache"]
 
 [project.scripts]
-print-hw = "gitreporter.__main__:main"
+gitreporter = "gitreporter.__main__:main"
