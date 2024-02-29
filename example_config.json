@@ -1,4 +1,16 @@
 {
-    "repo": "tests/",
-    "branch": "main"
+    "repo": ".",
+    "branch": "main",
+    "author-whitelist": [],
+    "author-blacklist": [],
+    "file-whitelist": [".c", ".h", ".cpp", ".hpp"],
+    "start-date": null,
+    "end-date": null,
+    "hard-end-date": null,
+    "diff-recursion-depth": 2,
+    "diff-recursion-block-size-threshold": 4,
+    "allow-modifications": false,
+    "modification-similarity": 0.8,
+    "modification-minimum-line-length": 2,
+    "comments-and-coding-standard": false
 }
