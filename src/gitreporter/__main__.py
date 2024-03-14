@@ -2,7 +2,6 @@ import sys
 import copy
 import json
 import argparse
-from pprint import pprint
 
 from .config import Config, ConfigException
 from .repository import GitRepository
@@ -40,13 +39,11 @@ def parse_arguments() -> dict:
     # repository settings
     parser.add_argument(
         "-r",
-        default=Config.DEFAULT_CONFIG["repo"],
         help="path to the git repository",
         dest="repo"
     )
     parser.add_argument(
         "-b",
-        default=Config.DEFAULT_CONFIG["branch"],
         help="branch that should be analysed",
         dest="branch"
     )
@@ -55,21 +52,18 @@ def parse_arguments() -> dict:
     parser.add_argument(
         "--author-whitelist",
         nargs="+",
-        default=Config.DEFAULT_CONFIG["author-whitelist"],
         help="only commits from these authors will be considered",
         dest="author-whitelist"
     )
     parser.add_argument(
         "--author-blacklist",
         nargs="+",
-        default=Config.DEFAULT_CONFIG["author-blacklist"],
         help="commits from these authors will be ignored",
         dest="author-blacklist"
     )
     parser.add_argument(
         "--file-ending-whitelist",
         nargs="+",
-        default=Config.DEFAULT_CONFIG["file-whitelist"],
         help="only files with these endings will be considered",
         dest="file-whitelist"
     )
@@ -93,14 +87,12 @@ def parse_arguments() -> dict:
     parser.add_argument(
         "--diff-recursion-depth",
         type=int,
-        default=Config.DEFAULT_CONFIG["diff-recursion-depth"],
         help="how many times the diff should be recursively analyzed",
         dest="diff-recursion-depth"
     )
     parser.add_argument(
         "--diff-recursion-block-size-threshold",
         type=int,
-        default=Config.DEFAULT_CONFIG["diff-recursion-block-size-threshold"],
         help="minimum size of a block to be considered for recursive diff",
         dest="diff-recursion-block-size-threshold"
     )
@@ -113,22 +105,20 @@ def parse_arguments() -> dict:
     parser.add_argument(
         "--modification-similarity",
         type=float,
-        default=Config.DEFAULT_CONFIG["modification-similarity"],
         help="similarity threshold for modifications",
         dest="modification-similarity"
     )
     parser.add_argument(
         "--modification-minimum-line-length",
         type=int,
-        default=Config.DEFAULT_CONFIG["modification-minimum-line-length"],
         help="minimum line length for modifications",
         dest="modification-minimum-line-length"
     )
     parser.add_argument(
         "--comments-and-coding-standard",
         action="store_true",
-        help="check for comments and coding standard",
-        dest="comments-and-coding-standard (currently only supported for c-like languages)"
+        help="check for comments and coding standard (currently only supported for c-like languages)",
+        dest="comments-and-coding-standard"
     )
 
     return vars(parser.parse_args(sys.argv[1:] if len(sys.argv) > 1 else ["-h"]))
@@ -145,26 +135,28 @@ def main():
         except:
             print("error: could not create configuration file.")
             exit(-1)
-        else:
-            print(f"created configuration file at {args['config']}")
-            exit(0)
-    elif args["config"]:
-        options = copy.copy(Config.DEFAULT_CONFIG)
+        print(f"created configuration file at {args['config']}")
+        exit(0)
+
+    options = copy.copy(Config.DEFAULT_CONFIG)
+    if args["config"]:
         try:
             with open(args["config"], "r") as f:
                 config_file = json.load(f)
         except:
             print("error: could not open configuration file.")
             exit(-1)
+
         for key, value in config_file.items():
             if key not in options:
                 print(f"error: invalid option in config file: {key}")
                 exit(-1)
             options[key] = value
-    else:
-        options = args
-        del options["config"]
-        del options["create-config"]
+
+    for key, value in args.items():
+        if value is None or value == False or key in ['config', 'create-config']:
+            continue
+        options[key] = value
 
     try:
         config = Config(options)
@@ -177,3 +169,6 @@ def main():
     git_repo.create_report()
 
     return 0
+
+if __name__ == "__main__":
+    main()

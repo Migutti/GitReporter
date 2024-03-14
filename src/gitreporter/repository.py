@@ -4,6 +4,7 @@ from .config import Config
 from .diff import GitDiff
 from .report import Report
 from .repository_statistic import GitRepositoryStatistic
+from .progressbar import ProgressBar
 
 
 class GitRepository:
@@ -56,7 +57,7 @@ class GitRepository:
             files.append(split_f)
         return files
 
-    def update_commit(self, commit: GitCommit):
+    def update_commit(self, commit: GitCommit, progress_bar: ProgressBar):
         """
         For a given commit, this function creates a mapping from each line of every file to the corresponding commit.
         This is done with a dynamic programming approach, such that every parent commit has to be considered only once.
@@ -76,10 +77,11 @@ class GitRepository:
 
             diff = GitDiff(None, commit, self.config)
             diff.create_diff()
+            progress_bar.increment()
             return
 
         for parent in commit.parents:
-            self.update_commit(parent)
+            self.update_commit(parent, progress_bar)
 
         if len(commit.parents) == 1:
             files = self.split_git_output(self.repo.git.diff(commit.parents[0].commit, commit.commit,
@@ -92,6 +94,7 @@ class GitRepository:
 
             diff = GitDiff(commit.parents[0], commit, self.config)
             diff.create_diff()
+            progress_bar.increment()
             return
 
         assert len(commit.parents) == 2, "we dont want to merge three commits..."
@@ -110,6 +113,7 @@ class GitRepository:
 
         diff = GitDiff(commit.parents[0], commit, self.config, commit.parents[1], )
         diff.create_diff()
+        progress_bar.increment()
         return
 
     def analyze(self):
@@ -119,12 +123,13 @@ class GitRepository:
 
         assert self.commit_list, "no commits could be found in this repository before hard end date..."
         start_commit = self.commit_list[0]
-        self.update_commit(start_commit)
+
+        with ProgressBar('Processing Commits', len(self.commit_list)) as progress_bar:
+            self.update_commit(start_commit, progress_bar)
 
     def create_report(self):
         self.statistics.add_commits(self.commit_list)
         self.statistics.survived_lines(self.commit_list)
-        self.statistics.create_json(write_to_file=True)
 
         report = Report(self.config, self.statistics, self.commit_list)
         report.create()

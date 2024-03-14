@@ -8,7 +8,7 @@ from .types import GitRepositoryStatisticCategory as RepoCategory, GitLineCatego
 
 
 class Report:
-    TITLE = 'GitReporter (Version 0.1)'
+    TITLE = 'GitReporter'
 
     def __init__(self, config, statistics, commit_list):
         self.config: Config = config
