@@ -41,7 +41,7 @@ class Report:
         return
 
     def file_reports(self):
-        for file in self.commit_list[0].files:
+        for file in self.statistics.totals_per_file:
             dictionary = {
                 'title': self.TITLE,
                 'subtitle': f'File: {file}',
@@ -219,5 +219,5 @@ class Report:
                 'name': filename,
                 'link': './files/' + filename.replace('.', '_').replace('/', '_') + '.html',
                 'value': self.statistics.totals_per_file[filename].get_sum(RepoCategory.SURVIVED_LINES)
-            } for filename in self.commit_list[0].files]
+            } for filename in self.statistics.totals_per_file]
         }
