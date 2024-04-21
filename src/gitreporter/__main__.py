@@ -124,7 +124,7 @@ def parse_arguments() -> dict:
     return vars(parser.parse_args(sys.argv[1:] if len(sys.argv) > 1 else ["-h"]))
 
 def main():
-    print("Gitreporter 0.2.5")
+    print("gitreporter 0.2.5")
 
     args = parse_arguments()
     if args["create-config"]:
