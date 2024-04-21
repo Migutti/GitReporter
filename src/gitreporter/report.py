@@ -56,7 +56,12 @@ class Report:
                     for author in self.statistics.authors_per_file
                     if file in self.statistics.authors_per_file[author]}
             )
-            dictionary |= self.line_mapping(file)
+            if file in self.commit_list[0].files:
+                dictionary |= self.line_mapping(file)
+            else:
+                dictionary |= {
+                    'line-mapping': []
+                }
             self.generate_html(f"files/{file.replace('.', '_').replace('/', '_')}", "report_template", dictionary)
 
     def generate_html(self, html_name, template_name, dictionary):
