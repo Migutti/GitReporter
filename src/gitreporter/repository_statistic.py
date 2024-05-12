@@ -83,6 +83,7 @@ class GitRepositoryStatistic:
                 self.authors[email][RepoCategory.SURVIVED_LINES][line.get_type()] += 1
                 self.authors_per_file[email][filename][RepoCategory.SURVIVED_LINES][line.get_type()] += 1
 
+    """
     def create_json(self, write_to_file=False):
         results = {
             "Options": self.config.get_options_with_datetime_string(),
@@ -96,3 +97,4 @@ class GitRepositoryStatistic:
                 f.write(json.dumps(results, indent=4))
 
         return results
+    """

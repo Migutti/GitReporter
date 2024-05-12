@@ -66,7 +66,7 @@ class Report:
 
     def generate_html(self, html_name, template_name, dictionary):
         template = files('gitreporter.templates').joinpath(f'{template_name}.mustache').read_text()
-        with open(f'gitreport/{html_name}.html', 'w', encoding='utf-8') as g:
+        with open(f'gitreport/{html_name}.html', 'w', encoding='utf-8', errors='ignore') as g:
             g.write(chevron.render(template, dictionary))
 
     def data_with_ref(self, data, reference):

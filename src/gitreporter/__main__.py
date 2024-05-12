@@ -124,7 +124,7 @@ def parse_arguments() -> dict:
     return vars(parser.parse_args(sys.argv[1:] if len(sys.argv) > 1 else ["-h"]))
 
 def main():
-    print("gitreporter 0.2.5")
+    print("GitReporter 0.2.6")
 
     args = parse_arguments()
     if args["create-config"]:
@@ -132,7 +132,7 @@ def main():
             print("error: specify a path to the configuration file with -c.")
             exit(-1)
         try:
-            with open(args["config"], "w") as f:
+            with open(args["config"], "w", encoding='utf-8') as f:
                 json.dump(Config.DEFAULT_CONFIG, f, indent=4)
         except:
             print("error: could not create configuration file.")
@@ -143,7 +143,7 @@ def main():
     options = copy.copy(Config.DEFAULT_CONFIG)
     if args["config"]:
         try:
-            with open(args["config"], "r") as f:
+            with open(args["config"], "r", encoding='utf-8') as f:
                 config_file = json.load(f)
         except:
             print("error: could not open configuration file.")
