@@ -212,7 +212,7 @@
                     let author = element.getAttribute("data-author");
                     let type = element.getAttribute("data-type");
 
-                    if (author === author_name || author_name === "total") {
+                    if (author === author_name || (author_name === "total" && author !== "")) {
                         switch (type) {
                             case "code":
                                 element.style.background = "var(--codecol)";
