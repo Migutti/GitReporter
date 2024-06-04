@@ -209,20 +209,21 @@ class Report:
 
         lines = self.commit_list[0].files[file].lines
         for idx, line in enumerate(lines, start=1):
+            author = self.find_author(line.history[0])
             dictionary['line-mapping'].append({
                 'number': idx,
                 'type': line.get_type().value.lower().replace(" ", "_"),
                 'content': line.text[:120],
-                'author': self.find_author(line.history[0]).lower().replace(" ", "_")
+                'author': author.lower().replace(" ", "_") if author else None
             })
 
         return dictionary
 
     def file_table(self):
         return {
-            'files': [{
+            'files': sorted([{
                 'name': filename,
                 'link': './files/' + filename.replace('.', '_').replace('/', '_') + '.html',
                 'value': self.statistics.totals_per_file[filename].get_sum(RepoCategory.SURVIVED_LINES)
-            } for filename in self.statistics.totals_per_file]
+            } for filename in self.statistics.totals_per_file], key=lambda x: x['value'], reverse=True)
         }
