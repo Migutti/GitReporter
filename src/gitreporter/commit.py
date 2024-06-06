@@ -119,6 +119,7 @@ class GitCommit:
                     self.deleted_files_p2.append(filename)
                 else:
                     self.deleted_files.append(filename)
+                self.files.pop(filename)
                 continue
 
             if filenames_1[filename] == 'M' and filenames_2[filename] == 'M':
