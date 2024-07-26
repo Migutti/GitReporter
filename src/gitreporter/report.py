@@ -1,4 +1,4 @@
-import os, chevron
+import os, chevron, json
 from importlib.resources import files
 
 from .commit import GitCommit
@@ -18,6 +18,12 @@ class Report:
         self.table_template = []
 
     def create(self):
+        if self.config.options['json']:
+            repository_report = self.json_repository_report()
+            with open('gitreport.json', 'w', encoding='utf-8', errors='ignore') as f:
+                json.dump(repository_report, f, indent=4)
+            return
+
         if "gitreport" not in os.listdir("."):
             os.mkdir("gitreport")
         if "files" not in os.listdir("gitreport"):
@@ -26,6 +32,27 @@ class Report:
         self.entire_repository_report()
         self.file_reports()
         return
+
+    def json_repository_report(self):
+        dictionary = {
+            'title': self.TITLE,
+            'repository': self.config.options['repo'].split('/')[-1],
+            'authors': []
+        }
+
+        dictionary['authors'].append({
+            'author-name': 'Total',
+            'statistics': self.statistics.totals
+        })
+
+        for author in sorted(self.statistics.authors):
+            if author in self.statistics.authors:
+                dictionary['authors'].append({
+                    'author-name': author,
+                    'statistics': self.statistics.authors[author]
+                })
+
+        return dictionary
 
     def entire_repository_report(self):
         dictionary = {

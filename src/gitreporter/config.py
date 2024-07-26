@@ -26,6 +26,7 @@ class Config:
         "modification-similarity": 0.8,
         "modification-minimum-line-length": 2,
         "comments-and-coding-standard": False,
+        "json": False
     }
 
     def __init__(self, options: Union[dict, None]=None):
@@ -51,7 +52,7 @@ class Config:
                 case "diff-recursion-depth" | "diff-recursion-block-size-threshold" | "modification-minimum-line-length":
                     if type(value) != int and type <= 0:
                         raise ConfigException(f"error: invalid type/value for {key}.")
-                case "allow-modifications" | "comments-and-coding-standard":
+                case "allow-modifications" | "comments-and-coding-standard" | "json":
                     if type(value) != bool:
                         raise ConfigException(f"error: invalid type for {key}.")
                 case "modification-similarity":

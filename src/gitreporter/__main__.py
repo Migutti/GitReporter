@@ -121,10 +121,18 @@ def parse_arguments() -> dict:
         dest="comments-and-coding-standard"
     )
 
+    # report settings
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="output the report in json format",
+        dest="json"
+    )
+
     return vars(parser.parse_args(sys.argv[1:] if len(sys.argv) > 1 else ["-h"]))
 
 def main():
-    print("GitReporter 0.2.9")
+    print("GitReporter 0.2.10")
 
     args = parse_arguments()
     if args["create-config"]:
