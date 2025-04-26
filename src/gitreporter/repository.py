@@ -12,7 +12,7 @@ class GitRepository:
         self.repo_path = config.options["repo"]
         self.repo: Repo = Repo(self.repo_path)
         self.branch = config.options["branch"]
-        self.repo.git.switch(self.branch)
+        self.repo.git.checkout(self.branch)
         self.commit_list = self.create_commit_list()
         self.statistics = GitRepositoryStatistic(config)
         self.config = config
