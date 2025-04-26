@@ -130,7 +130,7 @@ class GitCommit:
                     self.modified_files.append(filename)
                 else:
                     self.merge_files.append(filename)
-                    files_to_update.append(filename)
+                files_to_update.append(filename)
                 continue
 
             assert False, "You forget one case :(..."
